@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install base tools
-apt install curl iptables iptables-persistent -y
+apt update -y && apt upgrade -y && apt install curl iptables iptables-persistent -y
 
 # Install zerotier
 curl -s https://install.zerotier.com | sudo bash
