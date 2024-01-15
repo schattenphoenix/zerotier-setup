@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install base tools
-apt update -y > /dev/null && apt upgrade -y > /dev/null && apt install curl iptables iptables-persistent -y
+apt update -y > /dev/null && apt upgrade -y > /dev/null && apt install curl iptables -y
 
 # Install zerotier
 curl -s https://install.zerotier.com | bash
@@ -22,5 +22,4 @@ bash -c iptables-save > /etc/iptables/rules.v4
 chmod +x /usr/local/bin/startup.sh
 bash /usr/local/bin/startup.sh
 
-echo "Restarting container!"
-reboot now
+apt install -y iptables-persistent
