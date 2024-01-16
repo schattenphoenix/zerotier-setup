@@ -9,6 +9,10 @@ The `Destination` field needs to have your local networks IP (with the last segm
 
 ![Example of a managed route configuration.](images/zerotier_managedroute_example.png)
 
+Also make sure that you have a debian template in your system and that a `local-lvm` storage exists. If not, you might need to adjust the script to use your storage names.
+
+![Picture showing local-lvm storage.](images/local-lvm_storage.png)
+
 Use this command to interactively create the container: 
 ```
 bash -c "$(curl -s https://raw.githubusercontent.com/schattenphoenix/zerotier-setup/main/setup.sh)"
