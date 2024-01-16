@@ -1,16 +1,23 @@
 #!/bin/bash
 
-# Get container id to use
+# Get container id, network id and password
 read -r -p "Enter an unsued container id." CONTAINER_ID
-
-# Get zerotier network id
 read -r -p "Enter the zerotier network id." ZEROTIER_NETWORK
+read -r -s -p "Enter a password for the container." CONTAINER_PASSWORD
+
+# Input checks
+if [[ ${#ZEROTIER_NETWORK} -lt 5 ]] ; then
+    echo "The zerotier network id needs to be exactly 16 characters long!"
+    exit 1
+fi
+
+if [[ ${#CONTAINER_PASSWORD} -lt 5 ]] ; then
+    echo "The container password needs to be at least 5 characters long!"
+    exit 1
+fi
 
 # Get debian template
 TEMPLATE="/var/lib/vz/template/cache/$(ls /var/lib/vz/template/cache/ | grep debian | head -n 1)"
-
-# Ask container password
-read -r -s -p "Enter a password for the container." CONTAINER_PASSWORD
 
 # Create container
 pct create $CONTAINER_ID $TEMPLATE --ostype debian --hostname zerotier --memory 256 --net0 name=eth0,bridge=vmbr0,firewall=1,ip=dhcp --storage localblock --rootfs local-lvm:2 --cores 1 --start 1 --password $CONTAINER_PASSWORD
