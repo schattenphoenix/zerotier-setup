@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Prepare random prefix to prevent file overwriting
+RPREFIX="$(tr -dc A-Za-z0-9 </dev/urandom | head -c 13; echo)"
+
 # Get container id, network id and password
 read -r -p "Enter an unsued container id: " CONTAINER_ID
 read -r -p "Enter the zerotier network id: " ZEROTIER_NETWORK
@@ -30,17 +33,19 @@ echo "lxc.cgroup2.devices.allow: c 10:200 rwm" >> $LXC_CONFIG
 echo "lxc.mount.entry: /dev/net dev/net none bind,create=dir" >> $LXC_CONFIG
 
 # Pull files from git
-curl -s https://raw.githubusercontent.com/schattenphoenix/zerotier-setup/main/container_setup.sh -o container_setup.sh
-curl -s https://raw.githubusercontent.com/schattenphoenix/zerotier-setup/main/container_startup.sh -o container_startup.sh
-curl -s https://raw.githubusercontent.com/schattenphoenix/zerotier-setup/main/container_startup.service -o container_startup.service
+curl -s https://raw.githubusercontent.com/schattenphoenix/zerotier-setup/main/container_setup.sh -o $RPREFIX.container_setup.sh
+curl -s https://raw.githubusercontent.com/schattenphoenix/zerotier-setup/main/container_startup.sh -o $RPREFIX.container_startup.sh
+curl -s https://raw.githubusercontent.com/schattenphoenix/zerotier-setup/main/container_startup.service -o $RPREFIX.container_startup.service
 
 # Push files to container
-pct push $CONTAINER_ID container_setup.sh ~/setup.sh
-pct push $CONTAINER_ID container_startup.sh /usr/local/bin/startup.sh
-pct push $CONTAINER_ID container_startup.service /etc/systemd/system/startup.service
+pct push $CONTAINER_ID $RPREFIX.container_setup.sh ~/setup.sh
+
+# Startup service to enable ipv4 forwarding - seems broken in container otherwise!
+pct push $CONTAINER_ID $RPREFIX.container_startup.sh /usr/local/bin/startup.sh
+pct push $CONTAINER_ID $RPREFIX.container_startup.service /etc/systemd/system/startup.service
 
 # Remove remnant files
-rm container_startup.service container_startup.sh container_setup.sh
+rm $RPREFIX.container_startup.service $RPREFIX.container_startup.sh $RPREFIX.container_setup.sh
 
 # Execute setup in container
 lxc-attach -n $CONTAINER_ID -- chmod +x ~/setup.sh
