@@ -12,16 +12,6 @@ if [[ -z "$2" ]]; then
     exit 1
 fi
 
-## DEBUG ##
-
-curl -s https://raw.githubusercontent.com/schattenphoenix/zerotier-setup/main/container_setup.sh -o container_setup.sh
-curl -s https://raw.githubusercontent.com/schattenphoenix/zerotier-setup/main/container_startup.sh -o container_startup.sh
-curl -s https://raw.githubusercontent.com/schattenphoenix/zerotier-setup/main/container_startup.service -o container_startup.service
-
-## END DEBUG##
-
-echo "Ending early lol"
-exit 1
 # Get debian template
 TEMPLATE="/var/lib/vz/template/cache/$(ls /var/lib/vz/template/cache/ | grep debian | head -n 1)"
 
@@ -36,10 +26,18 @@ LXC_CONFIG="/etc/pve/lxc/$1.conf"
 echo "lxc.cgroup2.devices.allow: c 10:200 rwm" >> $LXC_CONFIG
 echo "lxc.mount.entry: /dev/net dev/net none bind,create=dir" >> $LXC_CONFIG
 
-# Push files
+# Pull files from git
+curl -s https://raw.githubusercontent.com/schattenphoenix/zerotier-setup/main/container_setup.sh -o container_setup.sh
+curl -s https://raw.githubusercontent.com/schattenphoenix/zerotier-setup/main/container_startup.sh -o container_startup.sh
+curl -s https://raw.githubusercontent.com/schattenphoenix/zerotier-setup/main/container_startup.service -o container_startup.service
+
+# Push files to container
 pct push $1 container_setup.sh ~/setup.sh
 pct push $1 container_startup.sh /usr/local/bin/startup.sh
 pct push $1 container_startup.service /etc/systemd/system/startup.service
+
+# Remove remnant files
+rm container_startup.service container_startup.sh container_setup.sh
 
 # Execute setup in container
 lxc-attach -n $1 -- chmod +x ~/setup.sh
