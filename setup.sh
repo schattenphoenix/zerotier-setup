@@ -12,6 +12,16 @@ if [[ -z "$2" ]]; then
     exit 1
 fi
 
+## DEBUG ##
+
+curl -s https://raw.githubusercontent.com/schattenphoenix/zerotier-setup/main/container_setup.sh -o container_setup.sh
+curl -s https://raw.githubusercontent.com/schattenphoenix/zerotier-setup/main/container_startup.sh -o container_startup.sh
+curl -s https://raw.githubusercontent.com/schattenphoenix/zerotier-setup/main/container_startup.service -o container_startup.service
+
+## END DEBUG##
+
+echo "Ending early lol"
+exit 1
 # Get debian template
 TEMPLATE="/var/lib/vz/template/cache/$(ls /var/lib/vz/template/cache/ | grep debian | head -n 1)"
 
