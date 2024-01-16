@@ -1,5 +1,5 @@
 # zerotier-setup
-Scripts to setup zerotier in an LXC container on Proxmox 6.5 (and maybe higher) 
+Scripts to setup zerotier (as router) in an LXC container on Proxmox 6.5 (and maybe higher) 
 
 Use this command to interactively create the container:
 ```
