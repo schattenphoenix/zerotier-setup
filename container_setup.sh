@@ -22,4 +22,6 @@ bash -c iptables-save > /etc/iptables/rules.v4
 chmod +x /usr/local/bin/startup.sh
 bash /usr/local/bin/startup.sh
 
+systemctl enable startup.service
+
 apt install -y iptables-persistent
