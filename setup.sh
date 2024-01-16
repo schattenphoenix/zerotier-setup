@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Get container id, network id and password
-read -r -p "Enter an unsued container id.\n" CONTAINER_ID
-read -r -p "Enter the zerotier network id.\n" ZEROTIER_NETWORK
-read -r -s -p "Enter a password for the container.\n" CONTAINER_PASSWORD
+read -r -p "Enter an unsued container id: " CONTAINER_ID
+read -r -p "Enter the zerotier network id: " ZEROTIER_NETWORK
+read -r -s -p "Enter a password for the container: " CONTAINER_PASSWORD
 
 # Input checks
-if [[ ${#ZEROTIER_NETWORK} -lt 5 ]] ; then
+if [ ${#ZEROTIER_NETWORK} != 16 ] ; then
     echo "The zerotier network id needs to be exactly 16 characters long!"
     exit 1
 fi
