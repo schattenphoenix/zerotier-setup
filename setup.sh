@@ -12,6 +12,12 @@ if [[ -z "$2" ]]; then
     exit 1
 fi
 
+# Get debian template
+TEMPLATE="/var/lib/vz/template/cache/$(ls /var/lib/vz/template/cache/ | grep debian | head -n 1)"
+
+# Create container
+pct create $1 $TEMPLATE --ostype debian --hostname zerotier --memory 256 --net0 name=eth0,bridge=vmbr0,firewall=1,ip=dhcp --storage localblock --rootfs local-lvm:2 --cores 1 --start 1
+
 # Prepare config path
 LXC_CONFIG="/etc/pve/lxc/$1.conf"
 # LXC_CONFIG="./Test$1.conf"
