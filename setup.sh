@@ -20,7 +20,7 @@ if [[ ${#CONTAINER_PASSWORD} -lt 5 ]] ; then
 fi
 
 # Get debian template
-TEMPLATE="/var/lib/vz/template/cache/$(ls /var/lib/vz/template/cache/ | grep debian | head -n 1)"
+TEMPLATE="/var/lib/vz/template/cache/$(ls /var/lib/vz/template/cache/ | grep debian-.*.standard | head -n 1)"
 
 # Create container
 pct create $CONTAINER_ID $TEMPLATE --ostype debian --hostname zerotier --memory 256 --net0 name=eth0,bridge=vmbr0,firewall=1,ip=dhcp --storage localblock --rootfs local-lvm:2 --cores 1 --start 1 --password $CONTAINER_PASSWORD
